@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <ctime>
+#include <sstream>
 
 using namespace std;
 
@@ -57,7 +58,10 @@ int orderID = 1000;
 // 6. Queue (Driver)
 queue<Order> driverQueue;
 
-// 7. Dynamic Graph (Routing)
+// 7. Item Frequency Counter (Analytics)
+unordered_map<string, int> itemOrderCount;
+
+// 8. Dynamic Graph (Routing)
 unordered_map<string, vector<pair<string, int>>> cityGraph;
 
 void initializeCityMap() {
@@ -73,6 +77,19 @@ void addNewAddressToGraph(string newAddress) {
     cityGraph[newAddress].push_back({"Main_Road", randomDistance});
     cityGraph["Main_Road"].push_back({newAddress, randomDistance});
     cout << "[GRAPH] Added Node: " << newAddress << " (Distance to Main Road: " << randomDistance << "km)\n";
+}
+
+void incrementItemCounters(const string& allItems) {
+    stringstream ss(allItems);
+    string item;
+    while(getline(ss, item, ',')) {
+        item.erase(0, item.find_first_not_of(" "));
+        item.erase(item.find_last_not_of(" ") + 1);
+        if(!item.empty()) {
+            itemOrderCount[item]++;
+            cout << "[COUNTER] " << item << " count: " << itemOrderCount[item] << endl;
+        }
+    }
 }
 
 string getRoute(string endNode) {
