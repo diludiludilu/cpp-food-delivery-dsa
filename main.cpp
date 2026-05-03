@@ -226,8 +226,12 @@ int main() {
 
         string allItems = ""; CartNode* curr = cartHead;
         while(curr) { allItems += curr->item + ", "; CartNode* temp=curr; curr=curr->next; delete temp; }
-        cartHead = cartTail = nullptr; 
-        
+
+        incrementItemCounters(allItems);  // Track item popularity
+        cout << "[CHECKOUT] Updated item frequencies. Total unique items tracked: " << itemOrderCount.size() << endl;
+
+        cartHead = cartTail = nullptr;
+
         adminQueue.push({orderID++, allItems, address, vip}); // Pass address to order
         res.set_content("{\"status\":\"success\"}", "application/json");
     });
